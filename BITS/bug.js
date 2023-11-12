@@ -89,7 +89,30 @@ router.get('/:id', async (req, res) => {
 // PUT route to update a bug
 router.put('/update/:id', async (req, res) => {
     try {
-        const bug = await Bug.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        const { 
+            assignedTo, 
+            priority, 
+            severity, 
+            stepsToReproduce, 
+            image, 
+            deadline, 
+            status, 
+            comments 
+        } = req.body;
+
+        // Prepare the update object
+        const updateData = {
+            ...(assignedTo && { assignedTo }),
+            ...(priority !== undefined && { priority }),
+            ...(severity !== undefined && { severity }),
+            ...(stepsToReproduce && { stepsToReproduce }),
+            ...(image && { image }),
+            ...(deadline && { deadline }),
+            ...(status && { status }),
+            ...(comments && { comments })
+        };
+
+        const bug = await Bug.findByIdAndUpdate(req.params.id, updateData, { new: true });
         if (!bug) {
             return res.status(404).send('Bug not found');
         }
@@ -99,6 +122,7 @@ router.put('/update/:id', async (req, res) => {
         res.status(500).send('Server error');
     }
 });
+
 
 // DELETE route to delete a bug
 router.delete('/delete/:id', async (req, res) => {
