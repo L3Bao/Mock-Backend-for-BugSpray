@@ -24,7 +24,7 @@ function isManager(req, res, next) {
 
         next();
     } catch (ex) {
-        res.status(400).send('Invalid token.');
+        res.status(400).send('Invalid token, isManager');
     }
 }
 
@@ -41,7 +41,7 @@ function isAuthenticated(req, res, next) {
       req.user = decoded;
       next();
     } catch (ex) {
-      res.status(400).send('Invalid token.');
+      res.status(400).send('Invalid token, isAuthenticated');
     }
   }
 
@@ -65,7 +65,7 @@ router.post('/create', isManager, async (req, res) => {
         
     } catch (error) {
         console.error(error);
-        res.status(500).send('Server error');
+        res.status(500).send('Server error, project');
     }
 });
 
@@ -77,7 +77,7 @@ router.get('/all', async (req, res) => {
         res.status(200).send(projects);
     } catch (error) {
         console.error(error);
-        res.status(500).send('Server error');
+        res.status(500).send('Server error, project');
     }
 });
 
@@ -103,7 +103,7 @@ router.get('/my-projects', isAuthenticated, async (req, res) => {
     } catch (error) {
       // Handle any errors
       console.error(error);
-      res.status(500).send('Server error');
+      res.status(500).send('Server error, project');
     }
   });
   
@@ -119,7 +119,7 @@ router.get('/:id', async (req, res) => {
         res.status(200).send(project);
     } catch (error) {
         console.error(error);
-        res.status(500).send('Server error');
+        res.status(500).send('Server error, project');
     }
 });
 

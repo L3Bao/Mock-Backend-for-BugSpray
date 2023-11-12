@@ -42,7 +42,7 @@ router.post('/report', authenticate, async (req, res) => {
         res.status(201).send(newBug);
     } catch (error) {
         console.error(error);
-        res.status(500).send('Server error');
+        res.status(500).send('Server error, bug');
     }
 });
 
@@ -54,7 +54,7 @@ router.get('/all', async (req, res) => {
         res.status(200).send(bugs);
     } catch (error) {
         console.error(error);
-        res.status(500).send('Server error');
+        res.status(500).send('Server error, bug');
     }
 });
 
@@ -67,7 +67,7 @@ router.get('/mybugs', authenticate, async (req, res) => {
         res.status(200).send(assignedBugs);
     } catch (error) {
         console.error(error);
-        res.status(500).send('Server error');
+        res.status(500).send('Server error, bug');
     }
 });
 
@@ -81,10 +81,28 @@ router.get('/:id', async (req, res) => {
         res.status(200).send(bug);
     } catch (error) {
         console.error(error);
-        res.status(500).send('Server error');
+        res.status(500).send('Server error, bug');
     }
 });
 
+// GET route to retrieve all bugs for a specific project
+router.get('/project/:projectId', async (req, res) => {
+    try {
+        const projectId = req.params.projectId;
+
+        // Validate projectId if necessary
+
+        const bugs = await Bug.find({ projectId }).populate('assignedTo', 'username');
+        if (!bugs || bugs.length === 0) {
+            return res.status(404).send('No bugs found for this project');
+        }
+
+        res.status(200).send(bugs);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Server error, bug');
+    }
+});
 
 // PUT route to update a bug
 router.put('/update/:id', async (req, res) => {
@@ -119,7 +137,7 @@ router.put('/update/:id', async (req, res) => {
         res.status(200).send(bug);
     } catch (error) {
         console.error(error);
-        res.status(500).send('Server error');
+        res.status(500).send('Server error, bug');
     }
 });
 
@@ -134,7 +152,7 @@ router.delete('/delete/:id', async (req, res) => {
         res.status(200).send('Bug deleted successfully');
     } catch (error) {
         console.error(error);
-        res.status(500).send('Server error');
+        res.status(500).send('Server error, bug');
     }
 });
 
